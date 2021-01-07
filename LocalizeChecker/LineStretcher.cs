@@ -24,13 +24,17 @@ namespace LocalizeChecker
                 predefinedEntityLength = GetPredefinedEntityLength(line, firstIndexOfValueNodeInnerText, lastIndexOfValueNodeInnerText);
             }
 
+            int characterInsertionIndex = firstIndexOfValueNodeInnerText;
+            int insertedCharacterNum = 0;
             double stretchRatio = 0.5;
-            int characterInsertionIndex = firstIndexOfValueNodeInnerText + 2;
-            int numberOfCharacterToAdd = (int)((lastIndexOfValueNodeInnerText - firstIndexOfValueNodeInnerText - predefinedEntityLength) * stretchRatio) - 2 - lineNum;
-            line = line.Insert(firstIndexOfValueNodeInnerText, CharacterCollection.PrefixOfStretchingLine.ToString());
+            line = line.Insert(characterInsertionIndex, CharacterCollection.PrefixOfStretchingLine.ToString());
+            characterInsertionIndex += 2;
+            insertedCharacterNum++;
             line = line.Insert(lastIndexOfValueNodeInnerText + 1, CharacterCollection.PostfixOfStretchingLine.ToString());
+            insertedCharacterNum++;
+            int numberOfCharacterToAdd = (int)((lastIndexOfValueNodeInnerText - firstIndexOfValueNodeInnerText - predefinedEntityLength) * stretchRatio) - lineNum;
 
-            while (numberOfCharacterToAdd >= 1)
+            while (numberOfCharacterToAdd > insertedCharacterNum)
             {
                 if (IsLineBreakCharacter(line[characterInsertionIndex]))
                 {
@@ -42,22 +46,22 @@ namespace LocalizeChecker
 
                 if (isContainingPredefinedEntity)
                 {
-                    SkipPredefinedEntity(ref line, ref characterInsertionIndex, ref numberOfCharacterToAdd);
+                    SkipPredefinedEntity(ref line, ref characterInsertionIndex, ref insertedCharacterNum);
                 }
 
                 line = line.Insert(characterInsertionIndex, CharacterCollection.InfixOfStretchingLine.ToString());
-                numberOfCharacterToAdd--;
+                insertedCharacterNum++;
                 characterInsertionIndex += 2;
             }
             return line;
         }
 
-        void SkipPredefinedEntity(ref string line, ref int index, ref int numToAdd)
+        void SkipPredefinedEntity(ref string line, ref int index, ref int insertedCharacterNum)
         {
             if (IsPrefixOfPredefinedEntity(line[index]))
             {
                 line = line.Insert(index, CharacterCollection.InfixOfStretchingLine.ToString());
-                numToAdd--;
+                insertedCharacterNum++;
 
                 while (!IsPostfixOfPredefinedEntity(line[index]))
                 {

@@ -14,7 +14,5 @@ namespace LocalizeChecker
         public const char LineBreakCharacter = '\n';
         public const char PrefixOfPredefinedEntity = '&';
         public const char PostfixOfPredefinedEntity = ';';
-
-
     }
 }
