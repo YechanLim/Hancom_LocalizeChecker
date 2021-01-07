@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalizeChecker", "LocalizeChecker\LocalizeChecker.csproj", "{50EB7EAF-3574-46F7-B9DD-61B2E3A6725A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50EB7EAF-3574-46F7-B9DD-61B2E3A6725A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50EB7EAF-3574-46F7-B9DD-61B2E3A6725A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50EB7EAF-3574-46F7-B9DD-61B2E3A6725A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50EB7EAF-3574-46F7-B9DD-61B2E3A6725A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B161F914-0AB3-430F-AE4E-C57DFC642040}
+	EndGlobalSection
+EndGlobal

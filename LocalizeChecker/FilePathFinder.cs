@@ -1,0 +1,104 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+
+namespace LocalizeChecker
+{
+    static class FilePathFinder
+    {
+        public static List<string> GetCSprojFilePathList(string filePath)
+        {
+            List<string> filePaths = new List<string>();
+            const string csprojFileExtension = ".csproj";
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"sln 파일을 읽을 수 없습니다. filePath: {filePath}");
+                return filePaths;
+            }
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (IsCSprojFileExtentionIncludedLine(line, csprojFileExtension))
+                        {
+                            filePaths.Add(Path.Combine(Path.GetDirectoryName(filePath), ParseCSprojFilePath(line, csprojFileExtension)));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"sln 파일을 읽는데 오류가 발생했습니다. 원인: {e.Message} ");
+            }
+            return filePaths;
+        }
+
+        static bool IsCSprojFileExtentionIncludedLine(string line, string csprojFileExtension)
+        {
+            return line.Contains(csprojFileExtension);
+        }
+
+        static string ParseCSprojFilePath(string line, string csprojFileExtension)
+        {
+            int stringIndex = line.IndexOf(csprojFileExtension);
+            while (line[--stringIndex] != '\"') ;
+
+            int firIndex = stringIndex + 1;
+            int endIndex = line.IndexOf(csprojFileExtension) + 6;
+
+            return line.Substring(firIndex, endIndex - firIndex + 1);
+        }
+
+        public static List<string> GetResxFilePathList(List<string> csprojFilePaths)
+        {
+            List<string> filePaths = new List<string>();
+            const string embeddedResourceTagName = "EmbeddedResource";
+            const string generatorTagName = "Generator";
+            const string generatorNodeInnerText = "ResXFileCodeGenerator";
+            foreach (string csprojFilePath in csprojFilePaths)
+            {
+                if (!File.Exists(csprojFilePath))
+                {
+                    Console.WriteLine($"csproj 파일을 읽을 수 없습니다. filePath: {csprojFilePath}");
+                    continue;
+                }
+
+                try
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(csprojFilePath);
+                    XmlNodeList embeddedResourceNodeList = doc.GetElementsByTagName(embeddedResourceTagName);
+
+                    for (int i = 0; i < embeddedResourceNodeList.Count; i++)
+                    {
+                        XmlNodeList childNodesOfEmbeddedResourceNode = embeddedResourceNodeList[i].ChildNodes;
+                        for (int j = 0; j < childNodesOfEmbeddedResourceNode.Count; j++)
+                        {
+                            if (IsValidGeneratorNode(childNodesOfEmbeddedResourceNode[j].Name, childNodesOfEmbeddedResourceNode[j].InnerText, generatorTagName, generatorNodeInnerText))
+                            {
+                                filePaths.Add(Path.Combine(Path.GetDirectoryName(csprojFilePath), embeddedResourceNodeList[i].Attributes["Include"].Value));
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"csproj 파일을 읽는데 오류가 발생했습니다. 원인: {e.Message} 경로: {csprojFilePath}");
+                }
+            }
+            return filePaths;
+        }
+
+        static bool IsValidGeneratorNode(string TagName, string innerText, string generatorTagName, string generatorNodeInnerText)
+        {
+            return TagName == generatorTagName && innerText.Contains(generatorNodeInnerText);
+        }
+
+    }
+}
