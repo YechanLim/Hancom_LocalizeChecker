@@ -49,8 +49,9 @@ namespace LocalizeChecker
             int stringIndex = line.IndexOf(csprojFileExtension);
             while (line[--stringIndex] != '\"') ;
 
-            int firIndex = stringIndex + 1;
-            int endIndex = line.IndexOf(csprojFileExtension) + 6;
+            stringIndex++;
+            int firIndex = stringIndex;
+            int endIndex = line.IndexOf(csprojFileExtension) + csprojFileExtension.Length - 1;
 
             return line.Substring(firIndex, endIndex - firIndex + 1);
         }

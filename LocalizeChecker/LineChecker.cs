@@ -41,7 +41,7 @@ namespace LocalizeChecker
             return false;
         }
 
-        public bool IsToBeStrechedLine(string line)
+        public bool IsToBeStretchedLine(string line)
         {
             if (IsContainingStartTagOfDataNode(line) && !IsContainingTypeAttribute(line))
             {

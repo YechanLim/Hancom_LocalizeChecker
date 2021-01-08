@@ -37,7 +37,7 @@ namespace LocalizeChecker
 
             while (numberOfCharacterToInsert > insertedCharacterNumber)
             {
-                SkipEndOfLineCharacter(line,ref characterInsertionIndex);
+                SkipEndOfLineCharacter(line, ref characterInsertionIndex);
                 SkipPredefinedEntity(ref line, ref characterInsertionIndex, ref insertedCharacterNumber);
 
                 line = line.Insert(characterInsertionIndex, CharacterCollection.InfixOfStretchingLine.ToString());

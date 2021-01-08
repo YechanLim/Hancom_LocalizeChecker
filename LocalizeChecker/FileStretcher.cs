@@ -42,7 +42,7 @@ namespace LocalizeChecker
                             {
                                 WriteLineToFile(writer, line);
                             }
-                            else if (lineChecker.IsToBeStrechedLine(line))
+                            else if (lineChecker.IsToBeStretchedLine(line))
                             {
                                 string stretchedLine = StretchLine(line);
 
@@ -67,7 +67,7 @@ namespace LocalizeChecker
                             }
                         }
                     }
-                   //  break;
+                    break;
                     if (!isAlreadyStretchedFile)
                     {
                         File.Copy(tempFile, filePath, true);

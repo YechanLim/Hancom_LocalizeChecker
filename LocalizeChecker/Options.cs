@@ -4,7 +4,7 @@ namespace LocalizeChecker
 {
     class Options
     {
-        [Option("target", Required = true, HelpText = "Enter solution file path to be stretched.")]
+        [Option("target", Required = true, HelpText = "대상 솔루션(.sln) 파일 경로 \nex) --target \"d:\\sample\\red.sln\"")]
         public string FilePath { get; set; }
     }
 }
