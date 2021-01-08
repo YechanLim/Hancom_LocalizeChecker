@@ -25,35 +25,39 @@ namespace LocalizeChecker
             }
 
             int characterInsertionIndex = firstIndexOfValueNodeInnerText;
-            int insertedCharacterNum = 0;
+            int insertedCharacterNumber = 0;
             double stretchRatio = 0.5;
+
             line = line.Insert(characterInsertionIndex, CharacterCollection.PrefixOfStretchingLine.ToString());
             characterInsertionIndex += 2;
-            insertedCharacterNum++;
-            line = line.Insert(lastIndexOfValueNodeInnerText + 1, CharacterCollection.PostfixOfStretchingLine.ToString());
-            insertedCharacterNum++;
-            int numberOfCharacterToAdd = (int)((lastIndexOfValueNodeInnerText - firstIndexOfValueNodeInnerText - predefinedEntityLength) * stretchRatio) - lineNum;
+            insertedCharacterNumber++;
+            line = line.Insert(lastIndexOfValueNodeInnerText + insertedCharacterNumber, CharacterCollection.PostfixOfStretchingLine.ToString());
+            insertedCharacterNumber++;
+            int numberOfCharacterToInsert = (int)((lastIndexOfValueNodeInnerText - firstIndexOfValueNodeInnerText - predefinedEntityLength) * stretchRatio) - lineNum;
 
-            while (numberOfCharacterToAdd > insertedCharacterNum)
+            while (numberOfCharacterToInsert > insertedCharacterNumber)
             {
-                if (IsLineBreakCharacter(line[characterInsertionIndex]))
-                {
-                    while (IsLineBreakCharacter(line[characterInsertionIndex]))
-                    {
-                        characterInsertionIndex++;
-                    }
-                }
-
-                if (isContainingPredefinedEntity)
-                {
-                    SkipPredefinedEntity(ref line, ref characterInsertionIndex, ref insertedCharacterNum);
-                }
+                SkipEndOfLineCharacter(line,ref characterInsertionIndex);
+                SkipPredefinedEntity(ref line, ref characterInsertionIndex, ref insertedCharacterNumber);
 
                 line = line.Insert(characterInsertionIndex, CharacterCollection.InfixOfStretchingLine.ToString());
-                insertedCharacterNum++;
+                insertedCharacterNumber++;
                 characterInsertionIndex += 2;
             }
             return line;
+        }
+
+        void SkipEndOfLineCharacter(string line, ref int index)
+        {
+            if (IsEndOfLineCharacter(line[index]))
+            {
+                index++;
+
+                while (IsEndOfLineCharacter(line[index]))
+                {
+                    index++;
+                }
+            }
         }
 
         void SkipPredefinedEntity(ref string line, ref int index, ref int insertedCharacterNum)
@@ -71,9 +75,9 @@ namespace LocalizeChecker
             }
         }
 
-        bool IsLineBreakCharacter(char character)
+        bool IsEndOfLineCharacter(char character)
         {
-            return character == CharacterCollection.LineBreakCharacter;
+            return character == CharacterCollection.EndOfLineCharacter;
         }
 
         bool IsPrefixOfPredefinedEntity(char character)

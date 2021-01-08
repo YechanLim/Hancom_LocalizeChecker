@@ -11,7 +11,7 @@ namespace LocalizeChecker
         public const char PrefixOfStretchingLine = '⁋';
         public const char PostfixOfStretchingLine = '¶';
         public const char InfixOfStretchingLine = '§';
-        public const char LineBreakCharacter = '\n';
+        public const char EndOfLineCharacter = '\n';
         public const char PrefixOfPredefinedEntity = '&';
         public const char PostfixOfPredefinedEntity = ';';
     }
