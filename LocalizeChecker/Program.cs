@@ -11,6 +11,7 @@ namespace LocalizeChecker
         {
             FileStretcher fileStretcher = new FileStretcher();
             List<string> filePaths = new List<string>();
+
             CommandLine.Parser.Default.ParseArguments<Options>(args)
                 .WithParsed<Options>(target =>
                 {

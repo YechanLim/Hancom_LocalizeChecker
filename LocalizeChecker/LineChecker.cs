@@ -17,6 +17,7 @@ namespace LocalizeChecker
             const string SingleLineComment = "//";
             const string beginningOfMultiLineComment = "<!--";
             const string endOfMultiLineComment = "-->";
+            const char space = ' ';
 
             if (line.Contains(beginningOfMultiLineComment))
             {
@@ -33,16 +34,8 @@ namespace LocalizeChecker
                 return true;
             }
 
-            if (line.Contains(SingleLineComment))
+            if (line.Trim(space).StartsWith(SingleLineComment))
             {
-                int lineIndex = line.IndexOf(SingleLineComment) - 1;
-                while (lineIndex >= 0)
-                {
-                    if (line[lineIndex--] != ' ')
-                    {
-                        return false;
-                    }
-                }
                 return true;
             }
             return false;
@@ -50,36 +43,37 @@ namespace LocalizeChecker
 
         public bool IsToBeStrechedLine(string line)
         {
-            if (IsMultiLineValueNode)
-            {
-                if (IsContainingEndTagOfValueNode(line))
-                {
-                    IsMultiLineValueNode = false;
-                }
-                return true;
-            }
-
-            if (IsContainingStartTagOfValueNode(line) && !IsContainingEndTagOfValueNode(line) && IsIncludedInDataNode)
-            {
-                IsMultiLineValueNode = true;
-                return true;
-            }
-
-            if (IsContainingStartTagOfValueNode(line) && IsContainingEndTagOfValueNode(line) && IsIncludedInDataNode)
-            {
-                return true;
-            }
-
             if (IsContainingStartTagOfDataNode(line) && !IsContainingTypeAttribute(line))
             {
                 IsIncludedInDataNode = true;
                 return false;
             }
-
-            if (IsContainingEndTagOfDataNode(line))
+            else if (IsContainingEndTagOfDataNode(line))
             {
                 IsIncludedInDataNode = false;
                 return false;
+            }
+
+            if (IsIncludedInDataNode)
+            {
+                if (IsMultiLineValueNode)
+                {
+                    if (IsContainingEndTagOfValueNode(line))
+                    {
+                        IsMultiLineValueNode = false;
+                    }
+                    return true;
+                }
+
+                if (IsContainingStartTagOfValueNode(line) && !IsContainingEndTagOfValueNode(line))
+                {
+                    IsMultiLineValueNode = true;
+                    return true;
+                }
+                else if (IsContainingStartTagOfValueNode(line) && IsContainingEndTagOfValueNode(line))
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -115,7 +109,7 @@ namespace LocalizeChecker
 
         public bool IsAlreadyStretchedFile(string line)
         {
-            return (line[line.IndexOf(StartTagOfValueNode) + 7] == CharacterCollection.PrefixOfStretchingLine) && (line[line.LastIndexOf(EndTagOfValueNode) - 1]) == CharacterCollection.PostfixOfStretchingLine;
+            return (line[line.IndexOf(StartTagOfValueNode) + StartTagOfValueNode.Length] == CharacterCollection.PrefixOfStretchingLine) && (line[line.LastIndexOf(EndTagOfValueNode) - 1]) == CharacterCollection.PostfixOfStretchingLine;
         }
 
         public bool IsContainingPredefinedEntity(string line)
