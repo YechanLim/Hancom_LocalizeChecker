@@ -67,7 +67,6 @@ namespace LocalizeChecker
                             }
                         }
                     }
-                    break;
                     if (!isAlreadyStretchedFile)
                     {
                         File.Copy(tempFile, filePath, true);

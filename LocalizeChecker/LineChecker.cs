@@ -54,26 +54,28 @@ namespace LocalizeChecker
                 return false;
             }
 
-            if (IsIncludedInDataNode)
+            if (!IsIncludedInDataNode)
             {
-                if (IsMultiLineValueNode)
-                {
-                    if (IsContainingEndTagOfValueNode(line))
-                    {
-                        IsMultiLineValueNode = false;
-                    }
-                    return true;
-                }
+                return false;
+            }
 
-                if (IsContainingStartTagOfValueNode(line) && !IsContainingEndTagOfValueNode(line))
+            if (IsMultiLineValueNode)
+            {
+                if (IsContainingEndTagOfValueNode(line))
                 {
-                    IsMultiLineValueNode = true;
-                    return true;
+                    IsMultiLineValueNode = false;
                 }
-                else if (IsContainingStartTagOfValueNode(line) && IsContainingEndTagOfValueNode(line))
-                {
-                    return true;
-                }
+                return true;
+            }
+
+            if (IsContainingStartTagOfValueNode(line) && !IsContainingEndTagOfValueNode(line))
+            {
+                IsMultiLineValueNode = true;
+                return true;
+            }
+            else if (IsContainingStartTagOfValueNode(line) && IsContainingEndTagOfValueNode(line))
+            {
+                return true;
             }
 
             return false;

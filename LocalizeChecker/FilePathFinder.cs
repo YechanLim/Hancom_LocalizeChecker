@@ -11,6 +11,7 @@ namespace LocalizeChecker
         {
             List<string> filePaths = new List<string>();
             const string csprojFileExtension = ".csproj";
+            string basePath = Path.GetDirectoryName(filePath);
 
             if (!File.Exists(filePath))
             {
@@ -27,7 +28,7 @@ namespace LocalizeChecker
                     {
                         if (IsCSprojFileExtentionIncludedLine(line, csprojFileExtension))
                         {
-                            filePaths.Add(Path.Combine(Path.GetDirectoryName(filePath), ParseCSprojFilePath(line, csprojFileExtension)));
+                            filePaths.Add(Path.Combine(basePath, ParseCSprojFileRelativePath(line, csprojFileExtension)));
                         }
                     }
                 }
@@ -44,7 +45,7 @@ namespace LocalizeChecker
             return line.Contains(csprojFileExtension);
         }
 
-        static string ParseCSprojFilePath(string line, string csprojFileExtension)
+        static string ParseCSprojFileRelativePath(string line, string csprojFileExtension)
         {
             int stringIndex = line.IndexOf(csprojFileExtension);
             while (line[--stringIndex] != '\"') ;
